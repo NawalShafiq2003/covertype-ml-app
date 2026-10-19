@@ -1,0 +1,31 @@
+# Python and local environments
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+*.token
+secrets.json
+
+# Angular dependencies and build outputs
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.ipynb_checkpoints/
+
+# Large dataset files (train CSV is 215 MB: GitHub rejects files > 100 MB)
+covertype_raw.csv
+covertype_train.csv
+covertype_test.csv
+# Raw estimator pickle: the deployable model is backend/models/model_bundle.joblib
+*.pkl
+
+# Local logs
+*.log

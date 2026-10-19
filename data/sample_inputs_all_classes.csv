@@ -1,0 +1,6 @@
+Elevation,Aspect,Slope,Horizontal_Distance_To_Hydrology,Vertical_Distance_To_Hydrology,Horizontal_Distance_To_Roadways,Hillshade_9am,Hillshade_Noon,Hillshade_3pm,Horizontal_Distance_To_Fire_Points,Wilderness_Area,Soil_Type,expected_cover_type
+2411,350,22,201,96,297,174,197,157,201,4,10,3
+2941,73,16,342,10,721,237,209,99,1945,3,24,1
+2676,94,13,458,64,780,240,220,107,1448,1,30,2
+2665,267,19,30,12,1400,168,244,214,1022,3,23,5
+3259,104,20,192,29,1048,249,210,80,1044,3,39,7

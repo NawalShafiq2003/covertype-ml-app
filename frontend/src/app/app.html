@@ -1,0 +1,53 @@
+<main class="shell">
+  <header><h1>Forest Cover Type Prediction</h1>
+    <p>Teaching prototype • Random Forest trained on UCI Covertype (7 classes)</p></header>
+  @if (deployedStatic) {
+    <aside class="notice">Static GitHub Pages demonstration only.
+      Predictions require Flask and Angular running locally.</aside>
+  }
+  <form (ngSubmit)="submit()">
+    <h2>Terrain inputs ({{fields.length}})</h2>
+    <div class="grid">
+      @for (field of fields; track field.name) {
+        <label>{{field.label}}
+          @if (field.kind === 'number') {
+            <input type="number" step="any" [name]="field.name"
+              [min]="field.min ?? null" [max]="field.max ?? null"
+              [placeholder]="field.min + ' to ' + field.max"
+              [(ngModel)]="values[field.name]" [required]="field.required" />
+          } @else {
+            <select [name]="field.name" [(ngModel)]="values[field.name]"
+              [required]="field.required">
+              <option [ngValue]="null">Select a value</option>
+              @for (option of field.options ?? []; track option.value) {
+                <option [ngValue]="option.value">{{option.label}}</option>
+              }
+            </select>
+          }
+        </label>
+      }
+    </div>
+    <button type="submit" [disabled]="loading() || deployedStatic">
+      {{loading() ? 'Predicting…' : 'Run local prediction'}}
+    </button>
+  </form>
+  @if (error()) { <p class="error" role="alert">{{error()}}</p> }
+  @if (result(); as res) {
+    <section class="result"><h2>Prediction result</h2>
+      <p class="big"><strong>{{res.label ?? res.prediction}}</strong>
+        (Cover_Type {{res.prediction}})</p>
+      @if (res.probabilities && res.class_labels) {
+        <table>
+          <thead><tr><th>Class</th><th>Probability</th></tr></thead>
+          <tbody>
+            @for (name of res.class_labels; track name; let i = $index) {
+              <tr [class.top]="res.classes?.[i] === res.prediction">
+                <td>{{name}}</td><td>{{pct(res.probabilities[i])}}</td></tr>
+            }
+          </tbody>
+        </table>
+      }
+      <p class="small">{{res.disclaimer}}</p>
+    </section>
+  }
+</main>

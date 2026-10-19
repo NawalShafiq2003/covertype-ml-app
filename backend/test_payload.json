@@ -1,0 +1,14 @@
+{
+  "Elevation": 2411,
+  "Aspect": 350,
+  "Slope": 22,
+  "Horizontal_Distance_To_Hydrology": 201,
+  "Vertical_Distance_To_Hydrology": 96,
+  "Horizontal_Distance_To_Roadways": 297,
+  "Hillshade_9am": 174,
+  "Hillshade_Noon": 197,
+  "Hillshade_3pm": 157,
+  "Horizontal_Distance_To_Fire_Points": 201,
+  "Wilderness_Area": 4,
+  "Soil_Type": 10
+}
