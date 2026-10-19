@@ -1,9 +1,16 @@
+import os
+# Limit math-library threads BEFORE numpy/sklearn are imported
+# (avoids OpenBLAS memory-allocation crashes on low-RAM machines)
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+
 import sys
 from pathlib import Path
 
 import joblib
 import pandas as pd
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE))  # lets joblib import preprocessing.py
@@ -15,6 +22,9 @@ SCHEMA = BUNDLE.get("schema", {})
 CLASS_NAMES = BUNDLE.get("class_names", {})
 TASK = BUNDLE.get("task", "classification")
 app = Flask(__name__)
+
+# Built Angular app (run `npm run build` in frontend/ first)
+DIST = (BASE.parent / "frontend" / "dist" / "frontend" / "browser").resolve()
 
 
 def validate(data):
@@ -33,11 +43,13 @@ def validate(data):
     return None
 
 
+@app.get("/api/health")
 @app.get("/health")
 def health():
     return jsonify(status="ok", features=len(FEATURES), task=TASK)
 
 
+@app.post("/api/predict")
 @app.post("/predict")
 def predict():
     data = request.get_json(silent=True)
@@ -67,6 +79,21 @@ def predict():
     except Exception:
         app.logger.exception("Prediction failed")
         return jsonify(error="Prediction processing failed"), 500
+
+
+@app.get("/")
+def home():
+    if (DIST / "index.html").exists():
+        return send_from_directory(DIST, "index.html")
+    return jsonify(message="Flask API is running", endpoints=["/health", "/predict"])
+
+
+@app.get("/<path:path>")
+def static_files(path):
+    target = (DIST / path).resolve()
+    if DIST in target.parents and target.is_file():
+        return send_from_directory(DIST, path)
+    return jsonify(error="Not found"), 404
 
 
 if __name__ == "__main__":
